@@ -66,27 +66,27 @@ int board[B_SIZE], shadow[B_SIZE];
 int *peek_shape;		/* peek preview of next shape */
 int *shape;
 
-int shapes[] = {
-	 7, TL, TC, MR,
-	 8, TR, TC, ML,
-	 9, ML, MR, BC,
-	 3, TL, TC, ML,
-	12, ML, BL, MR,
-	15, ML, BR, MR,
-	18, ML, MR,  2,		/* sticks out */
-	 0, TC, ML, BL,
-	 1, TC, MR, BR,
-	10, TC, MR, BC,
-	11, TC, ML, MR,
-	 2, TC, ML, BC,
-	13, TC, BC, BR,
-	14, TR, ML, MR,
-	 4, TL, TC, BC,
-	16, TR, TC, BC,
-	17, TL, MR, ML,
-	 5, TC, BC, BL,
-	 6, TC, BC,  2 * B_COLS, /* sticks out */
-};
+int shapes[] = { // edit begins here
+         7, TL, TC, MR,
+         8, TR, TC, ML,
+        11, ML, MR, BC,
+         3, TL, TC, ML,
+        14, ML, BL, MR,
+        17, ML, BR, MR,
+        18, ML, MR,  2,                 /* sticks out */
+         0, TC, ML, BL,
+         1, TC, MR, BR,
+         2, TC, MR, BC,
+         9, TC, ML, MR,
+        10, TC, ML, BC,
+         4, TC, BC, BR,
+        12, TR, ML, MR,
+        13, TL, TC, BC,
+         5, TR, TC, BC,
+        15, TL, MR, ML,
+        16, TC, BC, BL,
+         6, TC, BC,  2 * B_COLS,        /* sticks out */
+}; // edit ends here
 
 int update(void)
 {
