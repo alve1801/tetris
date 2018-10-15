@@ -69,23 +69,23 @@ int *shape;
 int shapes[] = {
 	 7, TL, TC, MR,
 	 8, TR, TC, ML,
-	 9, ML, MR, BC,
+	11, ML, MR, BC,
 	 3, TL, TC, ML,
-	12, ML, BL, MR,
-	15, ML, BR, MR,
-	18, ML, MR,  2,		/* sticks out */
+	14, ML, BL, MR,
+	17, ML, BR, MR,
+	18, ML, MR,  2,			/* sticks out */
 	 0, TC, ML, BL,
 	 1, TC, MR, BR,
-	10, TC, MR, BC,
-	11, TC, ML, MR,
-	 2, TC, ML, BC,
-	13, TC, BC, BR,
-	14, TR, ML, MR,
-	 4, TL, TC, BC,
-	16, TR, TC, BC,
-	17, TL, MR, ML,
-	 5, TC, BC, BL,
-	 6, TC, BC,  2 * B_COLS, /* sticks out */
+	 2, TC, MR, BC,
+	 9, TC, ML, MR,
+	10, TC, ML, BC,
+	 4, TC, BC, BR,
+	12, TR, ML, MR,
+	13, TL, TC, BC,
+	 5, TR, TC, BC,
+	15, TL, MR, ML,
+	16, TC, BC, BL,
+	 6, TC, BC,  2 * B_COLS,	/* sticks out */
 };
 
 int update(void)
@@ -126,7 +126,7 @@ int update(void)
 		}
 	}
 
-	/* Update points and level */
+	/* Update level */
 	while (lines_cleared >= 10) {
 		lines_cleared -= 10;
 		level++;
@@ -155,7 +155,6 @@ int fits_in(int *shape, int pos)
 {
 	if (board[pos] || board[pos + shape[1]] || board[pos + shape[2]] || board[pos + shape[3]])
 		return 0;
-
 	return 1;
 }
 
@@ -174,7 +173,6 @@ int *next_shape(void)
 	peek_shape = &shapes[rand() % 7 * 4];
 	if (!next)
 		return next_shape();
-
 	return next;
 }
 
@@ -297,7 +295,7 @@ int sig_init(void)
 
 int main(int argc, char *argv[])
 {
-	int c = 0, i, j, *ptr;
+	int c = 0, i, j, *ptr, linescore;
 	int pos = 17;
 	int *backup;
 
@@ -323,12 +321,13 @@ int main(int argc, char *argv[])
 				pos += B_COLS;
 			} else {
 				place(shape, pos, 7);
-				++points;
+				++points; // adds a point for each piece dropped
 				for (j = 0; j < 252; j = B_COLS * (j / B_COLS + 1)) {
 					for (; board[++j];) {
+						linescore = 0;
 						if (j % B_COLS == 10) {
 							lines_cleared++;
-
+							linescore++;
 							for (; j % B_COLS; board[j--] = 0)
 							   ;
 							c = update();
@@ -337,6 +336,7 @@ int main(int argc, char *argv[])
 							   ;
 							c = update();
 						}
+						points += 10*("\x0\x4\xa\x1e\x78"[linescore]);
 					}
 				}
 				shape = next_shape();
@@ -364,7 +364,7 @@ int main(int argc, char *argv[])
 		}
 
 		if (c == keys[KEY_DROP]) {
-			for (; fits_in(shape, pos + B_COLS); ++points)
+			for (; fits_in(shape, pos + B_COLS); points+=level)
 				pos += B_COLS;
 		}
 
